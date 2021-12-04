@@ -1,58 +1,38 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
-	"io"
-	"io/fs"
 	"log"
 	"net/http"
 	"os"
-	"strings"
 )
 
-var templates = map[string]*template.Template{}
+var templates *template.Template
 
 func init() {
-	templateDir := os.DirFS("templates")
-	matches, err := fs.Glob(templateDir, `*.html`)
+	var err error
+	var templatesDir = os.DirFS("templates")
+	templates, err = template.ParseFS(templatesDir, "*")
 	if err != nil {
 		log.Fatal(err)
-	}
-	for _, templateFileName := range matches {
-		file, err := templateDir.Open(templateFileName)
-		if err != nil {
-			log.Fatal(err)
-		}
-		contents, err := io.ReadAll(file)
-		if err != nil {
-			log.Fatal(err)
-		}
-		templateObject, err := template.New(strings.TrimSuffix(templateFileName, `.html`)).Parse(string(contents))
-		if err != nil {
-			log.Fatal(err)
-		}
-		templates[templateObject.Name()] = templateObject
-	}
-
-	for _, template := range templates {
-		fmt.Println(template.Name())
 	}
 }
 
 func main() {
 	http.HandleFunc("/", serveTemplate)
-
-	log.Println("Listening...")
 	http.ListenAndServe(":5000", nil)
 }
 
 func serveTemplate(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Path[1:]
-	template, ok := templates[name]
-	if !ok {
-		http.NotFound(w, r)
-		return
+	err := templates.ExecuteTemplate(w, "layout.html", struct {
+		AllTabs   []string
+		ActiveTab string
+	}{
+		AllTabs:   []string{`inbox`, `laterbox`, `keepbox`, `history`, `account`},
+		ActiveTab: name,
+	})
+	if err != nil {
+		log.Fatal(err)
 	}
-	template.Execute(w, nil)
 }

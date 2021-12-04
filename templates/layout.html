@@ -5,19 +5,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>micropesce</title>
 	<style>
-		.tabs > li {
+		.tabber li {
 			display: inline-block;
 			float: left;
 			padding: 5px;
 			border: 1px #999 solid;
 			border-radius: 2px 2px 0 0;
-			margin-bottom: -3px;
+			margin-bottom: -1px;
 			background: white;
+		}
+		.tabber li.active {
+			border-bottom-color: white;
 		}
 		main {
 			clear: both;
 			border: 1px #999 solid;
-			padding: 4rem;
+			padding: 0 40px;
 		}
 		article {
 			border: 1px #999 solid;
@@ -27,25 +30,18 @@
 </head>
 <body>
 	<header>
-		<nav>
-			<ul class="tabs">
-				<li><b>inbox</b></li>
-				<li><a>laterbox</a></li>
-				<li><a>keepbox</a></li>
-				<li><a>history</a></li>
-				<li><a>account</a></li>
-			</ul>
-		</nav>
+		{{template "tabber" .}}
 	</header>
-	<main>
-		<article>
-			<h1>today, i've hit two people</h1>
-			<p>i sure was angry</p>
-		</article>
-		<article>
-			<h1>today, i pët a cat</h1>
-			<p>i sure was happy</p>
-		</article>
-	</main>
+	{{if eq .ActiveTab "inbox"}}
+		{{template "inbox" .}}
+	{{else if eq .ActiveTab "laterbox"}}
+		{{template "laterbox" .}}
+	{{else if eq .ActiveTab "keepbox"}}
+		{{template "keepbox" .}}
+	{{else if eq .ActiveTab "history"}}
+		{{template "history" .}}
+	{{else if eq .ActiveTab "account"}}
+		{{template "account" .}}
+	{{end}}
 </body>
 </html>

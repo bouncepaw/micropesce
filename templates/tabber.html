@@ -1,0 +1,13 @@
+{{define "tabber"}}
+<nav class="tabber">
+	<ul>
+		{{range .AllTabs}}
+			{{if eq $.ActiveTab .}}
+				<li class="active"><b>{{.}}</b></li>
+			{{else}}
+				<li class="inactive"><a href="/{{.}}">{{.}}</a></li>
+			{{end}}
+		{{end}}
+	</ul>
+</nav>
+{{end}}
