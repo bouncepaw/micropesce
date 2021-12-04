@@ -1,6 +1,19 @@
 {{define "account"}}
 <main class="micropesce-account">
-	<h1>🙂 your account</h1>
-	<p>nothing here.</p>
+	<section>
+		<h1>🙂 your account</h1>
+		<p>manage your account and your feeds here.</p>
+	</section>
+	<section>
+		<h2>subscribed feeds</h2>
+		<ul class="feed-list">
+			{{range .Feeds}}
+			<li>
+				<h3><a href="/feed/{{.ID}}">{{.Name}}</a></h3>
+				<code>{{.URL}}</code>
+			</li>
+			{{end}}
+		</ul>
+	</section>
 </main>
 {{end}}

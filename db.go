@@ -8,6 +8,27 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func subscribeToGemfeed(db *sql.DB, name string, url string) error {
+	tx, err := db.Begin()
+	if err != nil {
+		return err
+	}
+
+	_, err = tx.Exec(
+		`insert into followed_content(name, url, silo) values(?, ?, 'gemfeed')`,
+		name, url)
+	if err != nil {
+		return err
+	}
+
+	err = tx.Commit()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func moo() {
 	db, err := sql.Open("sqlite3", "./db.sqlite")
 	if err != nil {
