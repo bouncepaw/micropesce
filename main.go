@@ -19,6 +19,7 @@ func init() {
 }
 
 func main() {
+	moo()
 	http.HandleFunc("/", serveTemplate)
 	http.ListenAndServe(":5000", nil)
 }
