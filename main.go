@@ -19,6 +19,7 @@ func init() {
 }
 
 func main() {
+	parseFlags()
 	moo()
 	http.HandleFunc("/", serveTemplate)
 	http.ListenAndServe(":5000", nil)
